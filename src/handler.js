@@ -70,6 +70,33 @@ const addBookHandler = (request, h) => {
   return response;
 };
 
+const getAllBooksHandler = (request, h) => {
+  if (books.length === 0) {
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: [],
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  const newBooks = [];
+  for (let index = 0; index < books.length; index += 1) {
+    const { id, name, publisher } = books[index];
+    newBooks.push({ id, name, publisher });
+  }
+
+  const response = h.response({
+    status: 'success',
+    data: newBooks,
+  });
+  response.code(200);
+  return response;
+};
+
 module.exports = {
   addBookHandler,
+  getAllBooksHandler,
 };
