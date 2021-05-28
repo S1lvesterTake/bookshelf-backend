@@ -15,7 +15,7 @@ const addBookHandler = (request, h) => {
 
   let finished = false;
 
-  if (name === '') {
+  if (name === '' || name === undefined) {
     const response = h.response({
       status: 'fail',
       message: 'Gagal menambahkan buku. Mohon isi nama buku',
@@ -99,8 +99,8 @@ const getAllBooksHandler = () => {
 };
 
 const getBookByIDHandler = (request, h) => {
-  const { bookID } = request.params;
-  const book = books.filter((item) => item.id === bookID);
+  const { bookId } = request.params;
+  const book = books.filter((item) => item.id === bookId);
 
   if (book !== undefined) {
     return {
@@ -119,8 +119,79 @@ const getBookByIDHandler = (request, h) => {
   return response;
 };
 
+const editBookByIDHandler = (request, h) => {
+  const { bookId } = request.params;
+  const bookIndex = books.findIndex((book) => book.id === bookId);
+
+  if (bookIndex === -1) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal memperbaharui buku. Id tidak ditemukan',
+    });
+    response.code(404);
+    return response;
+  }
+
+  let finished = false;
+  const updatedAt = new Date().toISOString();
+  const {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading,
+  } = request.payload;
+
+  if (name === '' || name === undefined) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal memperbaharui buku. Mohon isi nama buku',
+    });
+    response.code(400);
+    return response;
+  }
+
+  if (readPage > pageCount) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal memperbaharui buku. readPage tidak boleh lebih besar dari pageCount',
+    });
+    response.code(400);
+    return response;
+  }
+
+  if (readPage === pageCount) {
+    finished = true;
+  }
+
+  books[bookIndex] = {
+    ...books[bookIndex],
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading,
+    finished,
+    updatedAt,
+  };
+
+  const response = h.response({
+    status: 'success',
+    message: 'Buku berhasil diperbaharui',
+  });
+  response.code(200);
+  return response;
+};
+
 module.exports = {
   addBookHandler,
   getAllBooksHandler,
   getBookByIDHandler,
+  editBookByIDHandler,
 };
