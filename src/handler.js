@@ -66,6 +66,7 @@ const addBookHandler = (request, h) => {
         bookId: id,
       },
     });
+    response.code(201);
     return response;
   }
 
@@ -95,7 +96,9 @@ const getAllBooksHandler = () => {
 
   return {
     status: 'success',
-    data: newBooks,
+    data: {
+      books: newBooks,
+    },
   };
 };
 
@@ -105,7 +108,9 @@ const getBookByIDHandler = (request, h) => {
   if (bookItem.length > 0) {
     return {
       status: 'success',
-      data: bookItem[0],
+      data: {
+        book: bookItem[0],
+      },
     };
   }
 
@@ -124,7 +129,7 @@ const editBookByIDHandler = (request, h) => {
   if (bookIndex === -1) {
     const response = h.response({
       status: 'fail',
-      message: 'Gagal memperbaharui buku. Id tidak ditemukan',
+      message: 'Gagal memperbarui buku. Id tidak ditemukan',
     });
     response.code(404);
     return response;
@@ -146,7 +151,7 @@ const editBookByIDHandler = (request, h) => {
   if (name === '' || name === undefined) {
     const response = h.response({
       status: 'fail',
-      message: 'Gagal memperbaharui buku. Mohon isi nama buku',
+      message: 'Gagal memperbarui buku. Mohon isi nama buku',
     });
     response.code(400);
     return response;
@@ -155,7 +160,7 @@ const editBookByIDHandler = (request, h) => {
   if (readPage > pageCount) {
     const response = h.response({
       status: 'fail',
-      message: 'Gagal memperbaharui buku. readPage tidak boleh lebih besar dari pageCount',
+      message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
     });
     response.code(400);
     return response;
@@ -181,7 +186,7 @@ const editBookByIDHandler = (request, h) => {
 
   const response = h.response({
     status: 'success',
-    message: 'Buku berhasil diperbaharui',
+    message: 'Buku berhasil diperbarui',
   });
   response.code(200);
   return response;
