@@ -13,6 +13,8 @@ const addBookHandler = (request, h) => {
     reading,
   } = request.payload;
 
+  let finished = false;
+
   if (name === '') {
     const response = h.response({
       status: 'fail',
@@ -31,6 +33,10 @@ const addBookHandler = (request, h) => {
     return response;
   }
 
+  if (readPage === pageCount) {
+    finished = true;
+  }
+
   const id = nanoid(16);
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
@@ -43,7 +49,7 @@ const addBookHandler = (request, h) => {
     summary,
     publisher,
     pageCount,
-    finished: false,
+    finished,
     reading,
     insertedAt,
     updatedAt,
