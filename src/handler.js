@@ -78,7 +78,9 @@ const addBookHandler = (request, h) => {
   return response;
 };
 
-const getAllBooksHandler = () => {
+// eslint-disable-next-line no-unused-vars
+const getAllBooksHandler = (request, h) => {
+  const params = request.query;
   if (books.length === 0) {
     return {
       status: 'success',
@@ -88,9 +90,33 @@ const getAllBooksHandler = () => {
     };
   }
 
+  let tempBooks = books;
+  if (params.reading === '0') {
+    tempBooks = tempBooks.filter((book) => book.reading === false);
+  }
+
+  if (params.reading === '1') {
+    tempBooks = tempBooks.filter((book) => book.reading === true);
+  }
+
+  if (params.finished === '0') {
+    tempBooks = tempBooks.filter((book) => book.finished === false);
+  }
+
+  if (params.finished === '1') {
+    tempBooks = tempBooks.filter((book) => book.finished === true);
+  }
+
+  if (params.name !== '' && params.name !== undefined) {
+    const pattern = String(params.name).toLowerCase();
+    tempBooks = tempBooks.filter((book) => book.name.toLowerCase().includes(pattern));
+  }
+
   const newBooks = [];
-  for (let index = 0; index < books.length; index += 1) {
-    const { id, name, publisher } = books[index];
+  for (let index = 0; index < tempBooks.length; index += 1) {
+    const {
+      id, name, publisher,
+    } = books[index];
     newBooks.push({ id, name, publisher });
   }
 

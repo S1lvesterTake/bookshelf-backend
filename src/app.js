@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const Hapi = require('@hapi/hapi');
 const routes = require('./routes');
 
@@ -13,7 +14,7 @@ const init = async () => {
   });
   server.route(routes);
   await server.start();
-  console.log('server running on localhost 3000');
+  console.log('server running on localhost 5000');
 };
 
 init();
